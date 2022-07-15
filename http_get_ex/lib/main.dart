@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import 'Album.dart';
+
 /// GETメソッドでHTTP通信を行う
 void main() {
   runApp(const HttpGetApp());
@@ -18,27 +21,16 @@ class HttpGetApp extends StatefulWidget {
 /// HttpGetAppState
 class HttpGetAppState extends State<HttpGetApp> {
   final url = 'https://jsonplaceholder.typicode.com/albums';
-  var _albumJson = [];
-
-  void fetchData() async {
-    try {
-      // HTTP通信を行う
-      final response = await http.get(Uri.parse(url));
-      final jsonData = jsonDecode(response.body) as List;
-
-      // UIを更新する
-      setState((){
-        _albumJson = jsonData;
-      });
-    } catch (error) {
-      throw Exception(error.toString());
-    }
-  }
+  final List<Album> _albumList = [];
 
   @override
   void initState() {
     super.initState();
-    // Stateの初期化
+
+    // リストをクリア
+    updateList(List.empty());
+
+    // データを取得
     fetchData();
   }
 
@@ -51,16 +43,34 @@ class HttpGetAppState extends State<HttpGetApp> {
             title: const Text('HttpGetEx'),
           ),
           body: ListView.builder(
-              itemCount: _albumJson.length,
+              itemCount: _albumList.length,
               itemBuilder: (BuildContext context, int index) {
-                final post = _albumJson[index];
+                final album = _albumList[index];
+
                 final sb = StringBuffer();
-                sb.writeln("userId: ${post["userId"]}");
-                sb.writeln("id: ${post["id"]}");
-                sb.writeln("title: ${post["title"]}");
+                sb.writeln("userId: ${album.userId}");
+                sb.writeln("id: ${album.id}");
+                sb.writeln("title: ${album.title}");
 
                 return Text(sb.toString());
               })),
     );
+  }
+
+  // リストを更新
+  void updateList(List<Album> list) => setState(() {
+    _albumList.addAll(list);
+  });
+
+  // データを取得
+  void fetchData() async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      final jsonData = jsonDecode(response.body) as List;
+
+      updateList(jsonData.map((e) => Album.fromJson(e)).toList());
+    } catch (error) {
+      throw Exception(error.toString());
+    }
   }
 }
