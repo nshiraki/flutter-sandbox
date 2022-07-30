@@ -43,10 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    const textStyle = TextStyle(fontSize: 16);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DialogEx'),
+        title: const Text('DialogEx', style: textStyle),
       ),
       body: Center(
         child: Column(
@@ -54,21 +55,41 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // ダイアログの結果を表示
-            Text(_resultString),
-            // showDialogでダイアログを起動
-            ElevatedButton(
-                onPressed: _showDialog, child: const Text('showDialog')),
-            // SimpleDialogでダイアログを起動
-            ElevatedButton(
+            Text(_resultString, style: textStyle),
+
+            // showDialogでダイアログを起動するボタン
+            buildElevatedButton(
+                onPressed: _showDialog, text: 'showDialog',
+                style: textStyle),
+
+            // SimpleDialogでダイアログを起動するボタン
+            buildElevatedButton(
                 onPressed: _showSimpleDialog,
-                child: const Text('SimpleDialog')),
-            // AlertDialogでダイアログを起動
-            ElevatedButton(
-                onPressed: _showAlertDialog, child: const Text('AlertDialog')),
+                text: 'SimpleDialog',
+                style: textStyle),
+
+            // AlertDialogでダイアログを起動するボタン
+            buildElevatedButton(
+                onPressed: _showAlertDialog,
+                text: 'AlertDialog',
+                style: textStyle)
           ],
         ),
       ),
     );
+  }
+
+  // ElevatedButtonを生成
+  ElevatedButton buildElevatedButton(
+      {required VoidCallback? onPressed,
+      required String text,
+      TextStyle? style}) {
+    return ElevatedButton(
+        onPressed: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(text, style: style),
+        ));
   }
 
   // showDialogで任意のウィジェットを表示
