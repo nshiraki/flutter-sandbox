@@ -43,7 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    const margin = 48.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -51,17 +50,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
+          // 等間隔に配置
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox(height: margin),
+            // ダイアログの結果を表示
             Text(_resultString),
-            const SizedBox(height: margin),
+            // showDialogでダイアログを起動
             ElevatedButton(
                 onPressed: _showDialog, child: const Text('showDialog')),
-            const SizedBox(height: margin),
+            // SimpleDialogでダイアログを起動
             ElevatedButton(
                 onPressed: _showSimpleDialog,
                 child: const Text('SimpleDialog')),
-            const SizedBox(height: margin),
+            // AlertDialogでダイアログを起動
             ElevatedButton(
                 onPressed: _showAlertDialog, child: const Text('AlertDialog')),
           ],
