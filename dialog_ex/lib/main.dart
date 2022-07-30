@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // ダイアログの結果を格納
-  String _resultString = 'result';
+  late String _resultString;
 
   @override
   void initState() {
