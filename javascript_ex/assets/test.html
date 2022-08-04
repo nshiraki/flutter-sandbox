@@ -1,0 +1,38 @@
+<html>
+<head>
+    <!-- ビューポートの設定 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- javascript -->
+    <script language="javascript">
+        // html側でカウントアップした値を格納
+        var count = 0;
+
+        // ページが完全に読み込まれた時の処理
+        window.addEventListener("load", function() {
+            document.getElementById("text1").innerText = 0;
+        })
+
+        // Flutter側から呼ばれる処理
+        function incrementCounter() {
+            count++;
+            document.getElementById("text1").innerText = count;
+        }
+
+        // Flutterへデータを送信する処理
+        function sendFlutterApp() {
+            // html側でカウントアップした値をデータとして送信
+            let message ="count: " + count;
+            flutterApp.postMessage(message);
+        }
+
+    </script>
+</head>
+
+<body>
+<!-- カウント数 -->
+<div id="text1" style="color:black;font-size:150px;"></div>
+
+<!-- Flutterにメッセージを送信するボタン -->
+<button onclick="sendFlutterApp()">Send Message</button>
+</body>
+</html>
