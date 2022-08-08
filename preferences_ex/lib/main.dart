@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// プリファレンスの読み書きを行う処理を作成
-/// - shared_preferencesを利用してメッセージの保存と読み込みの処理を行う処理を作成する
+/// - shared_preferencesを利用してメッセージの保存と読み込みを行う処理を作成する
 /// パッケージ
 /// -　https://pub.dev/packages/shared_preferences
 void main() {
