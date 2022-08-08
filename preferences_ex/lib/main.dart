@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+/// プリファレンスの読み書きを行う処理を作成
+/// - shared_preferencesを利用してメッセージの保存と読み込みの処理を行う処理を作成する
+/// パッケージ
+/// -　https://pub.dev/packages/shared_preferences
 void main() {
   runApp(const MyApp());
 }
@@ -29,7 +34,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // テキストフィールドのコントローラー
   late TextEditingController _controller;
+  // プリファレンスの読み書きで使用するキー
+  final String _prefKey = 'pref_key_message';
 
   @override
   void initState() {
@@ -54,27 +62,38 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              // テキストフィールド
               TextField(
                 controller: _controller,
                 decoration: const InputDecoration(
+                  labelText: 'Message',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (text) {
                   // NOP
                 },
               ),
+              // 余白
+              const SizedBox(height: 32),
               // 保存ボタン
               ElevatedButton(
-                  onPressed: () {
-                    // TODO: データを保存
+                  onPressed: () async {
+                    // データを保存
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setString(_prefKey, _controller.text);
                   },
-                  child: const Text('Save')),
+                  child: const Text('Save Message')),
               // 読み込みボタン
               ElevatedButton(
-                  onPressed: () {
-                    // TODO: データを読み込み
+                  onPressed: () async {
+                    // データを読み込み
+                    final prefs =   await SharedPreferences.getInstance();
+                    final newText = prefs.getString(_prefKey) ?? '';
+                    setState(() {
+                      _controller.text = newText;
+                    });
                   },
-                  child: const Text('Load')),
+                  child: const Text('Load Message')),
             ],
           ),
         ),
