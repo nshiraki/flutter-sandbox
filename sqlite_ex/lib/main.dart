@@ -1,7 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:sqlite_ex/database_helper.dart';
 
-/// ローカルデータベースの読み書きを行う処理を作成する
+import 'note.dart';
+
+/// sqfliteを利用してローカルデータベースの読み書きを行う処理を作成する
 void main() {
   runApp(const MyApp());
 }
@@ -86,10 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _refreshItems() async {
-    // TODO: DBからデータを取得する処理に置き換える
-    await Future.delayed(const Duration(milliseconds: 1000));
+    final items = await DatabaseHelper.getItems();
     setState(() {
-      _items = _createDummyItems();
+      _items = items;
       _loading = false;
     });
   }
@@ -97,14 +99,14 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
 
-  // BottomSheetを表示する
+  /// BottomSheetを表示する
   void _showBottomSheet(Note? item) async {
     // テキストフィールドを初期化
     _titleController.text = '';
     _textController.text = '';
     // 更新の場合は、リストから既存のアイテムを取得してテキストフィールドを設定する
     if (item != null) {
-      // 最初に一致する既存のアイテムを取得
+      // リストから最初に一致する既存のアイテムを取得
       Note? existingItem = _items.firstWhereOrNull((Note note) {
         return note.id == item.id;
       });
@@ -145,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  child: Text(item == null ? '新規作成' : '更新'),
+                  child: Text(item == null ? '追加' : '更新'),
                   onPressed: () async {
                     if (item != null) {
                       // 更新
@@ -155,7 +157,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       await _addItem();
                     }
                     // BottomSheetを閉じる
-                    Navigator.of(context).pop();
+                    if(mounted){
+                      Navigator.of(context).pop();
+                    }
                   },
                 ),
               ],
@@ -166,60 +170,41 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  /// ダミーのデータを生成
-  /// TODO: 不要になったら削除する
-  List<Note> _createDummyItems() {
-    return [
-      for (var i = 0; i < 3; i++)
-        Note(
-          i + 1,
-          'ダミーのタイトル${i + 1}',
-          'ダミーのテキスト${i + 1}',
-        ),
-    ];
-  }
-
   /// アイテムを削除する
   Future<void> _deleteItem(Note item) async {
-    // TODO: DBの処理に置き換える
-    setState(() {
-      _items.remove(item);
-    });
+    await DatabaseHelper.deleteItem(item.id);
+
+    _showSnackBar('アイテムを削除しました');
+
+    _refreshItems();
   }
 
   /// アイテムを追加する
   Future<void> _addItem() async {
-    setState(() {
-      // TODO: DBの処理に置き換える
-      _items.add(
-        Note(
-          _items.isEmpty ? 1 : _items.last.id + 1,
-          _titleController.text,
-          _textController.text,
-        ),
-      );
-    });
+    await DatabaseHelper.insertItem(
+      _titleController.text,
+      _textController.text,
+    );
+    _showSnackBar('アイテムを追加しました');
+    _refreshItems();
   }
 
   /// アイテムを更新する
   Future<void> _updateItem(Note item) async {
-    // TODO: DBの処理に置き換える
-    setState(() {
-      int index = _items.indexOf(item);
-      _items[index] = Note(
-        item.id,
-        _titleController.text,
-        _textController.text,
-      );
-    });
+    await DatabaseHelper.updateItem(
+      item.id,
+      _titleController.text,
+      _textController.text,
+    );
+    _showSnackBar('アイテムを更新しました');
+    _refreshItems();
   }
-}
 
-/// アイテムデータ
-class Note {
-  final int id;
-  final String title;
-  final String text;
-
-  Note(this.id, this.title, this.text);
+  /// スナックバー表示する
+  void _showSnackBar(String message) =>
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
 }
