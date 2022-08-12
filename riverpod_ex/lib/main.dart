@@ -3,21 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Riverpodを利用して状態管理を行う処理を作成する
 
-/// 状態クラスの定義
+/// Stateクラス
+/// - immutableな状態クラスを定義
+@immutable
+class CounterState {
+  const CounterState({required this.count});
+
+  final int count;
+}
+
+/// 状態管理クラスの定義
 /// - StateNotifierクラスを継承して状態管理クラスを定義する
-class CounterStateNotifier extends StateNotifier<int> {
-  CounterStateNotifier(int state) : super(0);
+class CounterStateNotifier extends StateNotifier<CounterState> {
+  CounterStateNotifier(CounterState counterState)
+      : super(const CounterState(count: 0));
 
   /// 状態を更新する
   void increment() {
-    state++;
+    final newState = CounterState(count: state.count + 1);
+    state = newState;
   }
 }
 
 /// 依存関係の注入
 /// - StateNotifierProviderクラスに、状態管理クラスの依存を注入する
-final counterProvider = StateNotifierProvider<CounterStateNotifier, int>(
-  (ref) => CounterStateNotifier(0),
+final counterProvider =
+    StateNotifierProvider<CounterStateNotifier, CounterState>(
+  (ref) => CounterStateNotifier(const CounterState(count: 0)),
 );
 
 void main() {
@@ -55,7 +67,7 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     /// 状態の監視（値の受け取り）
     /// - 再描画の対象範囲を制限する場合は、カウント数のTextの部分をConsumerに置き換える
-    final count = ref.watch(counterProvider);
+    final CounterState counterState = ref.watch(counterProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +81,7 @@ class MyHomePage extends ConsumerWidget {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$count',
+              '${counterState.count}',
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
