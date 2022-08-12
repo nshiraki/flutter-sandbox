@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_ex/settings.dart';
 
 /// Riverpodを利用して状態管理を行う処理を作成する
 
@@ -7,9 +8,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// - immutableな状態クラスを定義
 @immutable
 class CounterState {
-  const CounterState({required this.count});
+  const CounterState({
+    required this.count,
+    this.isDisableCounter = false,
+  });
 
+  /// カウント値
   final int count;
+
+  /// カウンターのボタンが無効かどうか
+  final bool isDisableCounter;
 }
 
 /// 状態管理クラスの定義
@@ -20,7 +28,13 @@ class CounterStateNotifier extends StateNotifier<CounterState> {
 
   /// 状態を更新する
   void increment() {
-    final newState = CounterState(count: state.count + 1);
+    final newState = CounterState(
+        count: state.count + 1, isDisableCounter: state.isDisableCounter);
+    state = newState;
+  }
+
+  void setIsDisable(bool value) {
+    final newState = CounterState(count: state.count, isDisableCounter: value);
     state = newState;
   }
 }
@@ -84,18 +98,40 @@ class MyHomePage extends ConsumerWidget {
               '${counterState.count}',
               style: Theme.of(context).textTheme.headline4,
             ),
+            const SizedBox(
+              height: 32.0,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const SettingsPage();
+                    },
+                  ),
+                );
+              },
+              child: const Text('設定画面を表示'),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          /// 状態の更新
-          /// - 状態クラス（CounterStateNotifier）のメソッドを呼び出して、状態を更新する
-          ref.read(counterProvider.notifier).increment();
-        },
+        /// カウンターの状態に応じて、ボタンのタップ処理を設定
+        onPressed: counterState.isDisableCounter
+            ? null
+            : () {
+                /// 状態の更新
+                /// - 状態クラス（CounterStateNotifier）のメソッドを呼び出して、状態を更新する
+                ref.read(counterProvider.notifier).increment();
+              },
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+
+        /// カウンターの状態に応じてアイコンを設定
+        child: counterState.isDisableCounter
+            ? const Icon(Icons.not_interested, color: Colors.red)
+            : const Icon(Icons.add),
+      ),
     );
   }
 }
