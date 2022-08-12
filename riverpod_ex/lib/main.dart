@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Riverpodを利用して状態管理を行う処理を作成する
+
+/// 状態クラスの定義
+/// - StateNotifierクラスを継承して状態管理クラスを定義する
+class CounterStateNotifier extends StateNotifier<int> {
+  CounterStateNotifier(int state) : super(0);
+
+  /// 状態を更新する
+  void increment() {
+    state++;
+  }
+}
+
+/// 依存関係の注入
+/// - StateNotifierProviderクラスに、状態管理クラスの依存を注入する
+final counterProvider = StateNotifierProvider<CounterStateNotifier, int>(
+  (ref) => CounterStateNotifier(0),
+);
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    /// Riverpodでデータの受け渡しが可能な状態にする
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,34 +39,27 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+/// 状態の監視と更新
+/// ConsumerWidgetを継承して状態の監視、状態の更新を行う
+/// - ConsumerWidgetを継承した場合、Widget全体が再描画の対象範囲になってしまうため、
+/// 再描画のパフォーマンスを考慮する場合、Consumerを利用して再描画の対象範囲を制限する
+class MyHomePage extends ConsumerWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    /// 状態の監視（値の受け取り）
+    /// - 再描画の対象範囲を制限する場合は、カウント数のTextの部分をConsumerに置き換える
+    final count = ref.watch(counterProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('RiverpodEx'),
       ),
       body: Center(
         child: Column(
@@ -52,14 +69,18 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              '$count',
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          /// 状態の更新
+          /// - 状態クラス（CounterStateNotifier）のメソッドを呼び出して、状態を更新する
+          ref.read(counterProvider.notifier).increment();
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
