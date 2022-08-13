@@ -28,6 +28,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // テキスト入力のコントローラーを格納
+  late TextEditingController _inputTextController;
+
+  @override
+  void initState() {
+    super.initState();
+    _inputTextController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _inputTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +49,37 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('FileEx'),
       ),
-      body: Container()
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // テキストフィールドの生成
+            TextField(
+              minLines: 10,
+              maxLines: 10,
+              controller: _inputTextController,
+              decoration: const InputDecoration(
+                hintText: 'ファイルに読み書きするテキストを入力',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            // 書き込みボタンの生成
+            ElevatedButton(
+              onPressed: () {
+                // TODO: 書き込み処理を行う
+              },
+              child: const Text('ファイルに書き込む'),
+            ),
+            // 読み込みボタンの生成
+            ElevatedButton(
+              onPressed: () {
+                // TODO: 読み込み処理を行う
+              },
+              child: const Text('ファイルから読み込む'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
