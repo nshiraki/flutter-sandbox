@@ -1,3 +1,3 @@
 # provider_ex
 
-<img src="https://github.com/nshiraki/flutter-sandbox/blob/main/provider_ex/screenshot/img.gif">
+<img src="screenshot/img.gif" width="640px">
