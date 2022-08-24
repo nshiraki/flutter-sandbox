@@ -258,14 +258,16 @@ class ProductSubImageListItem extends StatelessWidget {
         itemCount: _images.length,
         itemBuilder: (BuildContext context, int index) {
           // リストアイテムを生成
-          return Container(
-            padding: const EdgeInsets.all(1),
-            width: size,
-            height: size,
-            decoration: const BoxDecoration(
-              color: Colors.black12,
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Container(
+              width: size,
+              height: size,
+              decoration: const BoxDecoration(
+                color: Colors.black12,
+              ),
+              child: Image.network(_images[index], fit: BoxFit.cover),
             ),
-            child: Image.network(_images[index], fit: BoxFit.contain),
           );
         },
         separatorBuilder: (BuildContext context, int index) {
