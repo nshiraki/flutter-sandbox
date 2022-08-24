@@ -1,3 +1,3 @@
 # image_graphics_ex
 
-<img src="screenshot/img.png" width="360px">
+<img src="screenshot/img.png" width="640px">
