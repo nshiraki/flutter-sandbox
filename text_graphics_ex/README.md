@@ -1,3 +1,4 @@
 # text_graphics_ex
 
-<img src="https://github.com/nshiraki/flutter-sandbox/blob/main/text_graphics_ex/screenshot/img.png">
+<img src="screenshot/img.png" width="640px">
+
