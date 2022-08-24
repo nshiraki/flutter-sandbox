@@ -6,12 +6,11 @@ part 'product.g.dart';
 
 /// ターミナル
 /// コード生成して監視、古い生成ファイルと競合していたら古いファイルを削除
-/// """
+/// '''
 /// flutter pub run build_runner watch --delete-conflicting-outputs
-/// """
+/// '''
 
 @freezed
-abstract class Product with _$Product {
   const factory Product({
     required int id,
     required String title,

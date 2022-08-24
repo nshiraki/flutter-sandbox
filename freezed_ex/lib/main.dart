@@ -8,11 +8,11 @@ import 'package:http/http.dart' as http;
 /// Freezedを利用した処理を作成する
 ///
 /// やること
-/// - FlutterのFreezedパッケージを追加する
-/// - Freezedでモデルのクラスを作成する
+/// - FlutterのFreezedパッケージを導入する
+/// - Freezedでjsonをシリアライズするモデルのクラスを作成する
 /// - モックのAPIを叩いてHTTP通信を行う
-/// - HTTP通信して得たjsonをパースしてモデルのクラスに格納する
-/// - jsonを格納したモデルの内容をリストで表示する
+/// - HTTP通信して得たjsonをモデルのクラスにシリアライズする
+/// - jsonをシリアライズしたモデルをリストで表示する
 ///
 /// 追加するパッケージ(jsonのシリアライズまでやるので全部入れる)
 /// - https://github.com/rrousselGit/freezed#install

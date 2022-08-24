@@ -5,14 +5,12 @@ part 'products.freezed.dart';
 
 part 'products.g.dart';
 
-/// ターミナル
-/// コード生成して監視、古い生成ファイルと競合していたら古いファイルを削除
-/// """
+/// NOTE: ターミナルで以下のコマンドを実行すると自動的に @freezed を見つけ出して、コード生成してくれます
+/// '''
 /// flutter pub run build_runner watch --delete-conflicting-outputs
-/// """
+/// '''
 
 @freezed
-abstract class Products with _$Products {
   const factory Products({
     required List<Product> products,
     required int total,
