@@ -11,6 +11,7 @@ part 'products.g.dart';
 /// '''
 
 @freezed
+class Products with _$Products {
   const factory Products({
     required List<Product> products,
     required int total,
