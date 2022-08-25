@@ -65,25 +65,31 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('FreezedEx'),
       ),
       body: FutureBuilder(
-        future: _fetchData(),
-        builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-          if (snapshot.hasData) {
-            // データが有る場合
-            var jsonString = snapshot.data?.toString();
-            if (jsonString == null) {
-              // データ取得失敗
-              return const Center(child: Text('データの取得に失敗しました'));
+          future: _fetchData(),
+          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // 通信中の場合（非同期処理中）
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
-            // jsonからアイテムを生成
-            var products = Products.fromJson(jsonDecode(jsonString));
-            items = products.products;
-            var shouldShowEmpty = items.isEmpty;
-            if (shouldShowEmpty) {
-              // データが0件だった場合
-              return const Center(child: Text('表示可能なデータがありませんでした'));
+
+            // 通信エラーの場合
+            if (snapshot.error != null) {
+              return const Center(child: Text('データの取得に失敗'));
+            }
+
+            // 成功の場合
+            final jsonString = snapshot.data?.toString();
+            // jsonが不正だった場合
+            if (jsonString == null) {
+              return const Center(child: Text('データの取得に失敗'));
             }
 
             // リストを生成
+            final products = Products.fromJson(jsonDecode(jsonString));
+            items = products.products;
+
             return Container(
               padding: const EdgeInsets.all(8),
               child: ListView.separated(
@@ -98,17 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             );
-          }
-
-          if (snapshot.hasError) {
-            // データ取得失敗
-            return const Center(child: Text('データの取得に失敗しました'));
-          }
-
-          // データ取得中
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
+          }),
     );
   }
 
