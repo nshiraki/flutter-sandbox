@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_ex/product.dart';
 import 'package:freezed_ex/products.dart';
 import 'package:http/http.dart' as http;
+import 'package:cached_network_image/cached_network_image.dart';
 
 /// Freezedを利用した処理を作成する
 ///
@@ -16,16 +17,8 @@ import 'package:http/http.dart' as http;
 ///
 /// 追加するパッケージ(jsonのシリアライズまでやるので全部入れる)
 /// - https://github.com/rrousselGit/freezed#install
-/// """
-/// flutter pub add freezed_annotation
-/// flutter pub add --dev build_runner
-/// flutter pub add --dev freezed
-/// # if using freezed to generate fromJson/toJson, also add:
-/// flutter pub add json_annotation
-/// flutter pub add --dev json_serializable
-/// """
 ///
-/// 叩くAPI
+/// 取得先のAPI
 /// - https://dummyjson.com/products
 void main() {
   runApp(const MyApp());
@@ -69,9 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 通信中の場合（非同期処理中）
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             // 通信エラーの場合
@@ -136,99 +127,65 @@ class ProductListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
-        padding: const EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             // サムネイル画像
-            SizedBox(
-              width: double.infinity,
-              height: 300,
-              child: Image.network(
-                product.thumbnail,
-                fit: BoxFit.cover,
-                errorBuilder: (BuildContext context, Object error,
-                    StackTrace? stackTrace) {
-                  return Container(
-                    alignment: Alignment.center,
-                    color: Colors.grey,
-                    child: const Center(
-                        child: Text('No Image',
-                            style: TextStyle(color: Colors.white))),
-                  );
-                },
-                loadingBuilder: (BuildContext context, Widget child,
-                    ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                  );
-                },
-              ),
-            ),
-            // テキスト表示
-            SizedBox(
-              width: double.infinity,
-              child: DefaultTextStyle(
-                style: const TextStyle(
-                    fontSize: 24,
-                    color: Colors.black,
-                    backgroundColor: Colors.white),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 余白
-                    const SizedBox(height: 16),
-                    // タイトル
-                    Text(
-                      product.title,
-                      style: const TextStyle(color: Colors.black, fontSize: 24),
-                    ),
-                    // 区切り線
-                    const Divider(
-                      height: 32,
-                      color: Colors.grey,
-                    ),
-                    // 価格
-                    Text(
-                      '${product.price}\$',
-                      style: const TextStyle(color: Colors.black, fontSize: 24),
-                    ),
-                    // 割引率
-                    ListTile(
-                      contentPadding: const EdgeInsets.only(left: 0),
-                      title: const Text('Discount Percentage'),
-                      subtitle: Text('-${product.discountPercentage}%'),
-                    ),
-                    // ブランド
-                    ListTile(
-                      contentPadding: const EdgeInsets.only(left: 0),
-                      title: const Text('Brand'),
-                      subtitle: Text(product.brand),
-                    ),
-                    // カテゴリ
-                    ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0),
-                        title: const Text('Category'),
-                        subtitle: Text(product.category)),
-                    // カテゴリ
-                    ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0),
-                        title: const Text('Description'),
-                        subtitle: Text(product.description)),
-                  ],
-                ),
-              ),
+            CachedNetworkImage(
+              imageUrl: product.thumbnail,
+              imageBuilder: (context, imageProvider) => Image(
+                  width: double.infinity, height: 300, image: imageProvider),
+              placeholder: (context, url) => const Icon(Icons.image),
+              errorWidget: (context, url, error) => const Icon(Icons.image),
             ),
             // 余白
             const SizedBox(height: 16),
-            // images
-            ProductSubImageListItem(product.images),
+            // タイトル
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                product.title,
+                style: const TextStyle(color: Colors.black, fontSize: 24),
+              ),
+            ),
+            // 区切り線
+            const Divider(height: 32, color: Colors.grey),
+            // 価格
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                textAlign: TextAlign.left,
+                '${product.price}\$',
+                style: const TextStyle(color: Colors.black, fontSize: 24),
+              ),
+            ),
+            // 割引率
+            ListTile(
+              contentPadding: const EdgeInsets.only(left: 0),
+              title: const Text('Discount Percentage'),
+              subtitle: Text('-${product.discountPercentage}%'),
+            ),
+            // ブランド
+            ListTile(
+              contentPadding: const EdgeInsets.only(left: 0),
+              title: const Text('Brand'),
+              subtitle: Text(product.brand),
+            ),
+            // カテゴリ
+            ListTile(
+                contentPadding: const EdgeInsets.only(left: 0),
+                title: const Text('Category'),
+                subtitle: Text(product.category)),
+            // カテゴリ
+            ListTile(
+                contentPadding: const EdgeInsets.only(left: 0),
+                title: const Text('Description'),
+                subtitle: Text(product.description)),
+            // 余白
+            const SizedBox(height: 16),
+            // サブ画像
+            ProductSubImageListItem(imageUrls: product.images),
           ],
         ),
       ),
@@ -236,34 +193,37 @@ class ProductListItem extends StatelessWidget {
   }
 }
 
-/// 商品サブ画像のリストを表示するWidget
-/// [_images]商品サブ画像のリスト
+/// 商品のサブ画像のリストを表示するWidget
+/// [imageUrls]商品のサブ画像のリスト
 class ProductSubImageListItem extends StatelessWidget {
-  const ProductSubImageListItem(this._images, {Key? key}) : super(key: key);
+  const ProductSubImageListItem({required this.imageUrls, Key? key})
+      : super(key: key);
 
-  final List<String> _images;
-  final size = 100.0;
+  final List<String> imageUrls;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: size,
+      height: 100,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: _images.length,
+        itemCount: imageUrls.length,
         itemBuilder: (BuildContext context, int index) {
           // リストアイテムを生成
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            child: Container(
-              width: size,
-              height: size,
-              decoration: const BoxDecoration(
-                color: Colors.black12,
-              ),
-              child: Image.network(_images[index], fit: BoxFit.cover),
-            ),
+          return CachedNetworkImage(
+            color: Colors.grey,
+            width: 100,
+            height: 100,
+            imageUrl: imageUrls[index],
+            imageBuilder: (context, imageProvider) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Image(image: imageProvider),
+              );
+            },
+            placeholder: (context, url) => const Icon(Icons.image),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           );
         },
         separatorBuilder: (BuildContext context, int index) {
