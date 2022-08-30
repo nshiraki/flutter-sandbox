@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
+/// Flutter Hooksを利用した処理を作成する
+/// - Flutter HooksのuseStateを利用してカウンターアプリの状態管理を行う
 void main() {
   runApp(const MyApp());
 }
@@ -14,29 +17,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: const UseStateHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+/// HooksのuseStateを利用したカウンターアプリのページ
+class UseStateHomePage extends HookWidget {
+  const UseStateHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // ステートとして管理する情報を定義
+    // NOTE: HookWidgetの中でuseState(初期値)を書くと、useStateValueNotifier<初期値の型>が返却される
+    final counter = useState(0);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('FlutterHooksEx'),
@@ -49,17 +44,21 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              // ステートの情報を参照する
+              counter.value.toString(),
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          // FABタップ時にステートの情報を更新する
+          counter.value++;
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

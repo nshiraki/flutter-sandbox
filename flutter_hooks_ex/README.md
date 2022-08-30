@@ -1,16 +1,11 @@
 # flutter_hooks_ex
+Flutter Hooksを利用した処理を作成する
 
-A new Flutter project.
+<img src="screenshot/img.png" width="360px">
 
-## Getting Started
+## 簡単な解説
+- Flutter HooksのPrimitivesなHooks（useState）を利用してカウンターアプリの状態管理を行う
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 利用パッケージ
+- flutter_hooks: ^0.18.5+1
+    - Flutter Hooksのパッケージ
