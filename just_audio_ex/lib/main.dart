@@ -153,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _loadAudioFromAssets() async {
     print('** _loadAudioFromAssets() **');
     try {
-      await _player.setAsset('assets/bgm/128_BPM124.mp3');
+      await _player.setAsset('assets/bgm/183.mp3');
     } catch (e) {
       print("Failed to load bgm from assets: $e");
     }
