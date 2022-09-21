@@ -1,16 +1,20 @@
 # text_to_speach_ex
 
-A new Flutter project.
+<img src="screenshot/img.png" width="360px">
 
-## Getting Started
+## Requirements
+- minSdkVersion 21
+- テキスト読み上げを使用する場合、Android 11をターゲットとするアプリは、マニフェスト`INTENT_ACTION_TTS_SERVICE`の`queries`要素で次のように 宣言する必要があります。
+    - 参考（公式）: https://developer.android.com/reference/android/speech/tts/TextToSpeech.Engine
+```
+<manifest>
+　　・・・
+    <queries>
+　　　・・・
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+</manifest>
+```
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
