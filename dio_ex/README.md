@@ -1,4 +1,5 @@
 # dio_ex
+dioのパッケージを利用してSpotify APIを叩き、自分のプレイリストのアイテムを取得・表示する
 
 ## How to Build
 - ビルドする場合、Spotify Developerサイトでアプリを作成し、取得したClient IDとClient SecretをApiClientクラスの定数に設定してください。
