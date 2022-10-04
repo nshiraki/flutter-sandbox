@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 trackName,
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
