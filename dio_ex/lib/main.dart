@@ -83,7 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   var item = snapshot.data?.items[index];
                   var imageUrl = item!.track!.album!.images.first.url;
                   var trackName = item.track!.name;
-                  var artistName = item.track!.album!.artists.first.name;
+                  var artistNames =
+                      item.track!.artists.map((e) => e.name).join(', ');
                   var albumName = item.track!.album!.name;
 
                   return Container(
@@ -126,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               // アーティスト名
                               Text(
                                 textAlign: TextAlign.left,
-                                artistName,
+                                artistNames,
                                 style: TextStyle(
                                   color: Colors.blueGrey[300],
                                   fontSize: 16,
