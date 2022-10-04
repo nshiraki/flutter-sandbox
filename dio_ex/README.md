@@ -9,4 +9,5 @@ dioのパッケージを利用してSpotify APIを叩き、自分のプレイリ
 ## Screenshot
 <img src="screenshot/img.png" width="360px">
 
-https://user-images.githubusercontent.com/9344579/193460091-1813b6b6-2f76-41d6-89ba-07aad9780ad8.mp4
+https://user-images.githubusercontent.com/9344579/193874351-f04b0ffd-2f34-4ee5-92af-b4caf2302e22.mp4
+
