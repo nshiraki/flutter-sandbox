@@ -89,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// GoogleMap生成時に呼ばれる
+  /// [controller]onMapCreatedから返却された、GoogleMapController
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
       _mapController = controller;
@@ -96,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// カメラの初期表示位置を返却
+  /// [return]初期表示位置のCameraPosition
   CameraPosition _getInitialCameraPosition() {
     return const CameraPosition(
       // 初期表示位置を東京にする
@@ -105,6 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// 表示位置（カメラ位置）を変更するボタンを生成する
+  /// [displayText]表示テキスト
+  /// [latLng]表示位置（カメラ位置）となる緯度経度
+  /// [return]ElevatedButton
   Widget _buildButton({
     required String displayText,
     required LatLng latLng,
@@ -118,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// 表示位置（カメラ位置）を変更する
+  /// [latLng]表示位置（カメラ位置）となる緯度経度
   void _updateCameraPosition({required LatLng latLng}) {
     setState(() {
       _mapController?.animateCamera(
