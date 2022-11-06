@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 /// GetXを利用して状態管理を行う処理を作成する
+/// 利用パッケージ
+/// - https://pub.dev/packages/get
 void main() {
   runApp(const MyApp());
 }
