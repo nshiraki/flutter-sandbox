@@ -64,7 +64,7 @@ class MainPage extends StatelessWidget {
                 )),
             // 余白
             const SizedBox(height: 16),
-            // SecondPageから返却された結果の表示をクリアする
+            // SecondPageから返却された結果の表示をクリアするボタン
             ElevatedButton(
               child: const Text('clear SecondPageResult'),
               onPressed: () => viewModel.onClearResultButton(),
